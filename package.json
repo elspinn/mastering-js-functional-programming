@@ -1,0 +1,17 @@
+{
+  "name": "node_ts_template",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:elspinn/node_ts_template.git",
+  "author": "Elias Spinn <elspinn@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsx watch src"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {}
+}

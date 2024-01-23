@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    //This is not a complete template: it only shows relevant module-related settings.
+    //Be sure to set other important options like 'target', 'lib', 'strict'
+
+    //Required
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true,
+
+    //Consult your bundler's documentation
+    "customConditions": ["module"],
+
+
+    //Recommended
+    "noEmit": true, // or `emitDeclarationOnly`
+    "allowImportingTsExtensions": true,
+    "allowArbitraryExtensions": true,
+    "verbatimModuleSyntax": false, //or `isolatedModules`
+
+    "strict": true,
+    "target": "ES2020",
+    "declaration": true,
+    "sourceMap": true,
+    "declarationMap": true,
+
+    "outDir": "dist"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"],
+  "ts-node": {
+    "esm": true
+  }
+}

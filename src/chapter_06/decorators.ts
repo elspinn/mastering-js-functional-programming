@@ -1,19 +1,14 @@
-import {fibonacci} from "./fibonacci.tsx";
+import {fibonacci, memoizedFibonacci} from "./fibonacci.ts";
 
 
 const fibonacciWithLogger = withLogger(fibonacci);
 // new Array(5).fill(0).forEach((_, i) => fibonacciWithLogger(i))
 
 const fibonacciWithPerformance = withPerformance(fibonacci);
-// new Array(10).fill(0).forEach((_, i) => fibonacciWithPerformance(i))
-// fibonacciWithPerformance(10)
-fibonacciWithPerformance(100)
-fibonacciWithPerformance(100)
-fibonacciWithPerformance(101)
-
 const fibonacciWithMemoAndPerf = withPerformance(memoize(fibonacci));
-// fibonacciWithMemoAndPerf(40)
-// fibonacciWithMemoAndPerf(40)
+
+fibonacciWithPerformance(20);
+[1, 2].forEach(() => fibonacciWithMemoAndPerf(20));
 
 //A decorator function that adds logging statements before and after a given function is called
 function withLogger<T extends (...args: any[]) => any>(fn: T) {
@@ -41,9 +36,15 @@ function withPerformance<T extends (...args: any[]) => any>(
 }
 
 //A memoizing function that caches function results;
-function memoize<T extends (n: number) => any>(fn: T) {
-    const cache: Record<number, ReturnType<T>> = {};
-    return (n: number): ReturnType<T> => {
-        return n in cache ? cache[n] : (cache[n] = fn(n))
+function memoize<T extends (...args: any[]) => any>(fn: T){
+    const PRIMITIVES = ['string', 'number'];
+    const cache: Record<string | number, ReturnType<T>> = {}
+
+    return (...args: Parameters<T>): ReturnType<T> => {
+        if(args.length === 1 && typeof args in PRIMITIVES){
+            return args[0] in cache ? cache[args[0]] : cache[args[0]] = fn(...args)
+        } else {
+            return JSON.stringify(args) in cache ? cache[JSON.stringify(args)] : (cache[JSON.stringify(args)] = fn(...args))
+        }
     }
 }

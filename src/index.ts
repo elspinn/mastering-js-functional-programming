@@ -1,1 +1,1 @@
-import './chapter_06/decorators.tsx';
+import './chapter_06/decorators';

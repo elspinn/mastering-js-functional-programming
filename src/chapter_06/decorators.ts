@@ -10,12 +10,16 @@ const fibonacciWithMemoAndPerf = withPerformance(memoize(fibonacci));
 fibonacciWithPerformance(20);
 [1, 2].forEach(() => fibonacciWithMemoAndPerf(20));
 
+const fibonacciWithLoggerOnce = withLogger(once(fibonacci));
+fibonacciWithLoggerOnce(5);
+fibonacciWithLoggerOnce(5);
+
 //A decorator function that adds logging statements before and after a given function is called
 function withLogger<T extends (...args: any[]) => any>(fn: T) {
     return function(...args: Parameters<T>): ReturnType<T>{
         console.log(`Entering function ${fn.name}`)
         const returnValue = fn(...args);
-        console.log(`Exiting function ${fn.name}`)
+        console.log(`Function ${fn.name} returning ${returnValue}`)
         return returnValue;
     }
 }
@@ -49,4 +53,29 @@ function memoize<T extends (...args: any[]) => any>(fn: T){
     }
 }
 
-export {withPerformance, memoize}
+//Wrapper function that limits a given function to be called once
+function once<T extends (...args: any[]) => any>(fn: T){
+    let done = false;
+
+    return ((...args: Parameters<T>) => {
+        if(!done){
+            const returnValue = fn(...args);
+            done = true;
+            return returnValue;
+        }
+    }) as T;
+}
+
+function oneAndAfter<T extends (...args: any[]) => any>(
+    once: T,
+    after: T
+){
+    let done = false;
+
+    return ((...args: Parameters<T>): ReturnType<T> => {
+        const toCall = !done ? once : after;
+        return toCall(...args);
+    }) as T
+}
+
+export {withLogger, withPerformance, memoize, once, oneAndAfter}

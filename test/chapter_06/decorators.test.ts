@@ -1,22 +1,27 @@
-import test, {describe} from 'node:test';
-import assert from "node:assert";
-import {fibonacci, memoizedFibonacci} from "../../src/chapter_06/fibonacci";
+import {describe, test, mock, afterEach} from "node:test";
+import assert from 'node:assert';
+import {withPerformance} from "../../src/chapter_06/decorators";
 
-describe('fibonacci', () => {
-    test('should return 0 for argument of 0', () => {
-        assert.equal(fibonacci(0), 0)
-    });
+describe('withPerformance', () => {
+        const mockFunction = mock.fn();
+        const mockLogger = mock.fn();
+        const mockTimer = mock.fn(() => 100);
+        const mockWithPerformance = withPerformance(mockFunction, mockLogger, mockTimer);
 
-    test('should return 1 for argument of 1', () => {
-        assert.equal(fibonacci(1), 1)
+    test('calls a wrapped function', () => {
+        mockWithPerformance();
+        assert.equal(mockFunction.mock.callCount(), 1)
     })
 
-    test('should return 0 for argument less than 0', () => {
-        assert.equal(fibonacci(-1), 0)
+    test('calls a given timer function', () => {
+        mockTimer.mock.resetCalls();
+        mockWithPerformance();
+        assert.equal(mockTimer.mock.callCount(), 2)
     })
 
-    test('should return 1 for argument of 2', () => {
-        assert.equal(fibonacci(2), 1)
+    test('calls a given logger function', () => {
+        mockLogger.mock.resetCalls();
+        mockWithPerformance();
+        assert.equal(mockLogger.mock.callCount(), 1)
     })
 })
-

@@ -66,7 +66,7 @@ function once<T extends (...args: any[]) => any>(fn: T){
     }) as T;
 }
 
-function oneAndAfter<T extends (...args: any[]) => any>(
+function onceAndAfter<T extends (...args: any[]) => any>(
     once: T,
     after: T
 ){
@@ -74,8 +74,11 @@ function oneAndAfter<T extends (...args: any[]) => any>(
 
     return ((...args: Parameters<T>): ReturnType<T> => {
         const toCall = !done ? once : after;
-        return toCall(...args);
+        const returnValue = toCall(...args);
+        done = true;
+
+        return returnValue;
     }) as T
 }
 
-export {withLogger, withPerformance, memoize, once, oneAndAfter}
+export {withLogger, withPerformance, memoize, once, onceAndAfter}

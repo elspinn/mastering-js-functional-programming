@@ -1,4 +1,4 @@
-import {fibonacci, memoizedFibonacci} from "./fibonacci.ts";
+import {fibonacci} from "./fibonacci.ts";
 
 
 const fibonacciWithLogger = withLogger(fibonacci);
@@ -81,4 +81,13 @@ function onceAndAfter<T extends (...args: any[]) => any>(
     }) as T
 }
 
-export {withLogger, withPerformance, memoize, once, onceAndAfter}
+function withDelayedPromise<T extends (...args: any[]) => any>(fn: T, delay: number = 1000) {
+    return (...args: Parameters<T>): Promise<ReturnType<T>> => {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => resolve(fn(...args)), delay)
+        })
+    }
+}
+
+export {withLogger, withPerformance, memoize, once, onceAndAfter, withDelayedPromise}
+
